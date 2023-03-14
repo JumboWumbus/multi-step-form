@@ -7,6 +7,7 @@ import { Question } from '@/types';
 import { type } from 'os';
 import { useMultiStepForm } from '@/utils/useMultiStepForm';
 import { FormEvent, useState } from 'react';
+import { MultiStepForm } from '@/components/MultiStepForm/MultiStepForm';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -41,18 +42,12 @@ let questionArray: Question[] = [
 
 export default function Home() {
 
-  // const [answers, setAnswers] = useState([]);
+  const [pageAnswer, setPageAnswer] = useState({});
 
-  // const updateAnswers = (value:string, category:string) =>{
-  //   setAnswers({...answers, [category] : value})
-  // }
-
-  const {steps, currentStepIndex, step, isFirstStep, isLastStep, back, next} = useMultiStepForm(questionArray.map((q,index)=>{return <QuestionItem question={q} key={`question_${index}`}/>}))
-
-  function onSubmit(e: FormEvent) {
-    e.preventDefault()
-    next()
+  const onPageAnswerUpdate = (step: any, questionObj: any) => {
+    setPageAnswer({...pageAnswer, [step]: questionObj})
   }
+
 
   return (
     <>
@@ -71,16 +66,12 @@ export default function Home() {
       {/* {questionArray.map((q,index) => {
         return <QuestionItem question={q} key={`question_${index}`}/>;
       })} */}
+    <h1 className="text-3xl font-bold underline">
+      Hello world!
+    </h1>
 
-      <form onSubmit={onSubmit}>
-        <h2>{`Question ${currentStepIndex + 1} of ${steps.length}`}</h2>
-        {step}
-
-        <div>
-          {!isFirstStep && <button type="button" onClick={back}>Back</button>}
-          <button type="submit" >{isLastStep ? "Complete" : "Continue"}</button>
-        </div>
-      </form>
+    <MultiStepForm questionList={questionArray} onPageUpdate={onPageAnswerUpdate} pageAnswers={pageAnswer}/>
+    
     </>
   );
 }
